@@ -36,10 +36,22 @@ module.exports = app => {
     });
 
     app.get("/api/workouts/range", (req, res) => {
-        db.Workout.find({}).limit(7, (err, data) => {
+        db.Workout.aggregate([
+            {
+                $addFields: {
+                    totalDuration: {
+                        $sum: "$exercises.duration"
+                    }
+                }
+            },
+            {
+                $limit: 7
+            }
+        ], (err, data) => {
             if (err) {
                 res.json(err);
             } else {
+                console.log(data);
                 res.json(data);
             };
         });
