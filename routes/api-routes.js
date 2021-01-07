@@ -6,4 +6,15 @@ module.exports = app => {
             res.json(dbWorkouts);
         });
     });
+
+    app.post("/api/workouts", (req, res) => {
+        console.log("hello");
+        db.Workout.create(req.body, (err, data) => {
+            if (err) {
+                res.json(err);
+            } else {
+                res.json(data);
+            }
+        });
+    });
 };
