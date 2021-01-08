@@ -9,34 +9,50 @@ module.exports = app => {
                         $sum: "$exercises.duration"
                     }
                 }
-            }]).then(dbWorkouts => {
-            res.json(dbWorkouts);
+            }
+        ], (err, data) => {
+            if (err) {
+                res.json(err);
+            } else {
+                res.json(data);
+            };
         });
     });
 
     app.post("/api/workouts", (req, res) => {
-        console.log("hello");
         db.Workout.create(req.body, (err, data) => {
             if (err) {
                 res.json(err);
             } else {
                 res.json(data);
-            }
+            };
         });
     });
 
     app.put("/api/workouts/:id", (req, res) => {
-        db.Workout.updateOne({_id: req.params.id}, {$push: {exercises: req.body}}, (err, data) => {
+        db.Workout.updateOne({
+            _id: req.params.id
+        }, 
+        {
+            $push: {
+                exercises: req.body
+            }
+        }, (err, data) => {
             if (err) {
                 res.json(err);
             } else {
                 res.json(data);
-            }
+            };
         });
     });
 
     app.get("/api/workouts/range", (req, res) => {
         db.Workout.aggregate([
+            {
+                $sort: {
+                    day: -1
+                }
+            },
             {
                 $addFields: {
                     totalDuration: {
@@ -51,7 +67,6 @@ module.exports = app => {
             if (err) {
                 res.json(err);
             } else {
-                console.log(data);
                 res.json(data);
             };
         });
