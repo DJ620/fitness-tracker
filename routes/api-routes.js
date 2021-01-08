@@ -1,6 +1,7 @@
 const db = require("../models");
 
 module.exports = app => {
+    // Get route to grab all documents in the workouts collection and add up each exercise's duration into a new field called 'totalDuration'
     app.get("/api/workouts", (req, res) => {
         db.Workout.aggregate([
             {
@@ -19,6 +20,7 @@ module.exports = app => {
         });
     });
 
+    // Post route to create a new document in the workouts collection
     app.post("/api/workouts", (req, res) => {
         db.Workout.create(req.body, (err, data) => {
             if (err) {
@@ -29,6 +31,7 @@ module.exports = app => {
         });
     });
 
+    // Put route to add exercises to an existing workout document
     app.put("/api/workouts/:id", (req, res) => {
         db.Workout.updateOne({
             _id: req.params.id
@@ -46,6 +49,7 @@ module.exports = app => {
         });
     });
 
+    // Get route to grab the 7 most recent workouts and add up the duration of all exercises inside each document into the 'totalDuration' field
     app.get("/api/workouts/range", (req, res) => {
         db.Workout.aggregate([
             {
